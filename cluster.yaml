@@ -1,0 +1,32 @@
+#cluster.yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: test-cluster
+  region: us-west-1
+
+vpc:
+  subnets:
+    private:
+      us-west-1a: { id: subnet-xxxxx }
+      us-west-1b: { id: subnet-xxxxx }
+
+nodeGroups:
+  - name: ng-1
+    labels: { role: workers }
+    instanceType: m5.large
+    desiredCapacity: 2
+    amiFamily: AmazonLinux2
+    containerRuntime: dockerd
+    privateNetworking: true
+  - name: ng-2
+    labels: { role: builders }
+    instanceType: m5.large
+    desiredCapacity: 2
+    amiFamily: AmazonLinux2
+    containerRuntime: dockerd
+    privateNetworking: true
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
